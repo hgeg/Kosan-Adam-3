@@ -48,7 +48,7 @@ void CameraC::moveCamera()
    {
      if(relX - (this->w - this->rBoundary) > 120)
        this->x += 14;
-     if(relX - (this->w - this->rBoundary) > 70)
+     else if(relX - (this->w - this->rBoundary) > 70)
        this->x += 11;
      else if(relX - (this->w - this->rBoundary) > 40)
        this->x += 7;
