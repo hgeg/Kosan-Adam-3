@@ -15,7 +15,7 @@
 #define JUMPSTEPS 10
 
 //static SDL_Rect                     tempSurface = {0,0,65,113};
-//armut
+//elma
 
 
 SDL_Surface* screen   = NULL      ;
