@@ -47,8 +47,8 @@ void createD(DynamicObject *a, int x, int y, int w, int h, SDL_Surface *i)
   a->ySpeed = 0;
 
   a->type = 0;
-  a->state = jumpingRight;
-  a->stateAI = idle;
+  a->state = JumpingRight;
+  a->stateAI = Idle;
   a->inAir = 1;
   a->climbing = 0;
   a->direction = 0;
@@ -146,8 +146,8 @@ Controllable::Controllable (int xx, int yy, int ww, int hh, SDL_Surface *i)
   ySpeed = 0;
 
   type = 0;
-  state = jumpingRight;
-  stateAI = idle;
+  state = JumpingRight;
+  stateAI = Idle;
   inAir = 1;
   climbing = 0;
   direction = 0;
@@ -210,7 +210,7 @@ void Controllable::control_left()
       setSpeed(xSpeed-3,ySpeed);
     direction = 1;
     if(climbing) 
-      setState(idle);
+      setState(Idle);
       climbing = 0;
 }
 
@@ -258,15 +258,15 @@ void Controllable::step()
       ySpeed = ySpeed + world->settings.gravity; 
     if(xSpeed>0)
     {
-      setState(jumpingRight);        
+      setState(JumpingRight);        
     }
     else if(xSpeed<0)
     { 
-      setState(jumpingLeft);
+      setState(JumpingLeft);
     }
     else
-      if(direction) setState(jumpingLeft);
-      else setState(jumpingRight);
+      if(direction) setState(JumpingLeft);
+      else setState(JumpingRight);
     if(ySpeed>50) ySpeed = 50; //terminal velocity;
     else if(ySpeed<-50) ySpeed = -50;
   }
@@ -274,16 +274,16 @@ void Controllable::step()
   {
     if(xSpeed>0.0001)
       if(!running)
-        setState(walkingRight);
+        setState(WalkingRight);
       else 
-        setState(runningRight);
+        setState(RunningRight);
     else if(xSpeed<-0.0001)
       if(!running)
-        setState(walkingLeft);
+        setState(WalkingLeft);
       else 
-        setState(runningLeft);
+        setState(RunningLeft);
     else
-      setState(idle);
+      setState(Idle);
   }
   if(inAir)
   {
@@ -317,7 +317,7 @@ void Controllable::step()
   }
   if(climbing)
   {
-     setState(climbing);
+     setState(Climbing);
      if(ySpeed>3)
       setSpeed(xSpeed,ySpeed-5);
     else if(ySpeed<-3)
@@ -485,15 +485,15 @@ void stepD(DynamicObject * a, int timePassed)
       a->ySpeed = a->ySpeed + a->world->settings->gravity; 
     if(a->xSpeed>0)
     {
-      setStateD(a,jumpingRight);        
+      setStateD(a,JumpingRight);        
     }
     else if(a->xSpeed<0)
     { 
-      setStateD(a,jumpingLeft);
+      setStateD(a,JumpingLeft);
     }
     else
-      if(a->direction) setStateD(a,jumpingLeft);
-      else setStateD(a,jumpingRight);
+      if(a->direction) setStateD(a,JumpingLeft);
+      else setStateD(a,JumpingRight);
     if(a->ySpeed>50) a->ySpeed = 50; //terminal velocity;
     else if(a->ySpeed<-50) a->ySpeed = -50;
   }
@@ -501,16 +501,16 @@ void stepD(DynamicObject * a, int timePassed)
   {
     if(a->xSpeed>0.0001)
       if(!a->running)
-        setStateD(a,walkingRight);
+        setStateD(a,WalkingRight);
       else 
-        setStateD(a,runningRight);
+        setStateD(a,RunningRight);
     else if(a->xSpeed<-0.0001)
       if(!a->running)
-        setStateD(a,walkingLeft);
+        setStateD(a,WalkingLeft);
       else 
-        setStateD(a,runningLeft);
+        setStateD(a,RunningLeft);
     else
-      setStateD(a,idle);
+      setStateD(a,Idle);
   }
   if(a->inAir)
   {
@@ -544,7 +544,7 @@ void stepD(DynamicObject * a, int timePassed)
   }
   if(a->climbing)
   {
-     setStateD(a,climbing);
+     setStateD(a,Climbing);
      if(a->ySpeed>3)
       setSpeedD(a,a->xSpeed,a->ySpeed-5);
     else if(a->ySpeed<-3)
@@ -860,7 +860,7 @@ void control_left(DynamicObject * a)
       setSpeedD(a,a->xSpeed-3,a->ySpeed);
     a->direction = 1;
     if(a->climbing) 
-      setStateD(a,idle);
+      setStateD(a,Idle);
       a->climbing = 0;
 }
 

@@ -231,7 +231,7 @@ void GameWorldC::handleCollision(Controllable *a){
         {
             if(a->climbing)
             {
-              a->setState(climbing);
+              a->setState(Climbing);
               if(a->x - a->world->staticObjects[i].x>3) a->xSpeed = -5;
               else if(a->x - a->world->staticObjects[i].x<-3) a->xSpeed = 5;
               else 
@@ -310,7 +310,7 @@ void handleCollision(DynamicObject *a){
         {
             if(a->climbing)
             {
-              setStateD(a,climbing);
+              setStateD(a,Climbing);
               if(a->x - a->world->staticObjects[i].x>3) a->xSpeed = -5;
               else if(a->x - a->world->staticObjects[i].x<-3) a->xSpeed = 5;
               else 
@@ -381,30 +381,30 @@ void handleCollision(DynamicObject *a){
 
 void handleAI(Controllable *a)
 {
-  if(a->stateAI==idle)
+  if(a->stateAI==Idle)
   {
     if(!(rand()%30))
     {  
       if(rand()%2)
-        a->stateAI = walkingLeft;
+        a->stateAI = WalkingLeft;
       else
-        a->stateAI = walkingRight;
+        a->stateAI = WalkingRight;
     }
   }
-  if(a->stateAI==walkingRight)
+  if(a->stateAI==WalkingRight)
   {
       if(!(rand()%20))
-        a->stateAI = idle;
+        a->stateAI = Idle;
       else
         a->control_right();
         if(!(rand()%6)) a->control_jump();
         a->control_right();
         a->control_right();
   }
-  if(a->stateAI==walkingLeft)
+  if(a->stateAI==WalkingLeft)
   {
       if(!(rand()%20))
-        a->stateAI = idle;
+        a->stateAI = Idle;
       else
         a->control_left();
         if(!(rand()%6)) a->control_jump();
@@ -415,30 +415,30 @@ void handleAI(Controllable *a)
 
 void handleAI(DynamicObject *a)
 {
-  if(a->stateAI==idle)
+  if(a->stateAI==Idle)
   {
     if(!(rand()%30))
     {  
       if(rand()%2)
-        a->stateAI = walkingLeft;
+        a->stateAI = WalkingLeft;
       else
-        a->stateAI = walkingRight;
+        a->stateAI = WalkingRight;
     }
   }
-  if(a->stateAI==walkingRight)
+  if(a->stateAI==WalkingRight)
   {
       if(!(rand()%20))
-        a->stateAI = idle;
+        a->stateAI = Idle;
       else
         control_right(a);
         if(!(rand()%6)) control_jump(a);
         control_right(a);
         control_right(a);
   }
-  if(a->stateAI==walkingLeft)
+  if(a->stateAI==WalkingLeft)
   {
       if(!(rand()%20))
-        a->stateAI = idle;
+        a->stateAI = Idle;
       else
         control_left(a);
         if(!(rand()%6)) control_jump(a);

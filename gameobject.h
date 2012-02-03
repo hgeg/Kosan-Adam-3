@@ -8,14 +8,14 @@
 
 enum objectStates 
 {
-  idle = 0,
-  walkingRight = 1,
-  walkingLeft = 2,
-  jumpingRight = 3,
-  jumpingLeft = 4,
-  climbing = 5,
-  runningLeft = 6,
-  runningRight = 7 
+  Idle = 0,
+  WalkingRight = 1,
+  WalkingLeft = 2,
+  JumpingRight = 3,
+  JumpingLeft = 4,
+  Climbing = 5,
+  RunningLeft = 6,
+  RunningRight = 7 
 };
 
 class GameWorldC;
