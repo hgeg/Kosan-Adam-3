@@ -33,7 +33,9 @@ void CameraC::moveCamera()
    if(relX < this->lBoundary )
    {
      /*this->x = this->focus->x + this->focus->w/2 - this->lBoundary;*/
-     if(this->lBoundary-relX >70)
+     if(this->lBoundary-relX >120)
+       this->x -= 14;
+     else if(this->lBoundary-relX >70)
        this->x -= 11;
      else if(this->lBoundary-relX >40)
        this->x -= 7;
@@ -44,6 +46,8 @@ void CameraC::moveCamera()
    }
    else if(relX > (this->w - this->rBoundary))
    {
+     if(relX - (this->w - this->rBoundary) > 120)
+       this->x += 14;
      if(relX - (this->w - this->rBoundary) > 70)
        this->x += 11;
      else if(relX - (this->w - this->rBoundary) > 40)
