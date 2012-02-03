@@ -19,7 +19,6 @@
 
 
 SDL_Surface* screen   = NULL      ;
-GameWorld world;
 
 unsigned int                 SCREEN_BPP = 32;
 unsigned int                 SCREEN_WIDTH = 800;

@@ -16,16 +16,5 @@ class BackgroundC{
 
 };
 
-typedef struct{
-  int w, h;
-  int xOffset, yOffset;
-  int layer;
-  SDL_Surface *imageSurface;
-  SDL_Rect posRect;
-  SDL_Rect clippingRect;
-}Background;
-
-void createBackground(Background * back,int w, int h, SDL_Surface * i, int l, int x, int y);
-void drawBackground(Background * back, Camera * cam);
 
 #endif

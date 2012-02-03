@@ -32,32 +32,7 @@ class GameWorldC
 
 };
 
-typedef struct GameWorld_t
-{
-  StaticObject staticObjects[300];
-  DynamicObject dynamicObjects[200];
-  DynamicObject * player;
-  GameSettings * settings;
-  Camera * cam;
-  Background  bg[3];
-  int staticCount;
-  int running;
-  int dynamicCount;
-}GameWorld;
 
-void createWorld(GameWorld * a, DynamicObject * player, GameSettings * settings, Camera * cam);
-
-void worldStep(GameWorld * a, int gameSpeed);
-
-void addStaticObject(GameWorld * a, StaticObject * object);
-
-void addBackground(GameWorld  *a, int w, int h, SDL_Surface * i, int l, int x, int y);
-
-void handleInput(GameWorld * a) ;
-
-void handleCollision(DynamicObject *a);
-
-int loadMap(char *map, GameWorld * a);
 
 
 #endif

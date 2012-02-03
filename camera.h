@@ -2,13 +2,6 @@
 #define CAMERA_H
 
 
-typedef struct{
-  int x,y;
-  int w,h;
-  int rBoundary, lBoundary;
-  int uBoundary, dBoundary;
-  DynamicObject * focus;
-}Camera;
 
 class CameraC{
   public:
@@ -25,8 +18,4 @@ class CameraC{
 };
 
 
-void cameraInit(Camera * cam, DynamicObject * focus, int x, int y,int w, int h,
-		int lBoundary, int rBoundary, int uBoundary, int dBoundary);
-
-void moveCamera(Camera * cam);
 #endif

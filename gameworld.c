@@ -13,10 +13,6 @@
 #include "gameworld.h"
 
 static SDL_Surface                  textures[20];
-DynamicObject kosan;
-Camera cam;
-GameSettings settings ;
-Background bg;
 
 GameWorldC::GameWorldC (Controllable * player, CameraC * cam)
 {
@@ -28,28 +24,12 @@ GameWorldC::GameWorldC (Controllable * player, CameraC * cam)
   this->running = 1;
 }
 
-void createWorld(GameWorld * a, DynamicObject * player, GameSettings * settings, Camera * cam)
-{
-  settings->gravity = 3 ;
-  a->player = player;
-  a->settings = settings;
-  a->cam = cam;
-  a->staticCount = 0;
-  a->dynamicCount = 0;
-  a->running = 1;
-
-}
 
 void GameWorldC::addBackground(int w, int h, SDL_Surface * i, int l, int x, int y){
   BackgroundC bg(w,h,i,l,x,y);
   this->bg[l] = bg; 
 }
 
-void addBackground(GameWorld  *a, int w, int h, SDL_Surface * i, int l, int x, int y){
-  Background bg;
-  createBackground(&bg,w,h,i,l,x,y);
-  a->bg[l] = bg; 
-}
 
 void GameWorldC::addStaticObject(GameObject * object)
 {
@@ -57,11 +37,6 @@ void GameWorldC::addStaticObject(GameObject * object)
   this->staticCount++;
 }
 
-void addStaticObject(GameWorld * a, StaticObject * object)
-{
-  a->staticObjects[a->staticCount] = *object;
-  a->staticCount++;
-}
 
 void GameWorldC::handleInput() 
 {
@@ -141,83 +116,6 @@ void GameWorldC::handleInput()
   }
 }
 
-void handleInput(GameWorld * a) 
-{
-  static SDL_Event event;
-  Uint8 * keystates = SDL_GetKeyState(NULL);
-  if(keystates[SDLK_UP])
-  {
-    control_jump(a->player);
-  }
-  if(keystates[SDLK_DOWN])
-  {
-    control_down(a->player);
-  }
-  if(keystates[SDLK_r])
-  {
-    setPosD(a->player, 470 , 10);
-    setSpeedD(a->player,0,0);
-  }
-  if(keystates[SDLK_LSHIFT])
-  {
-    if(a->player->stamina>0) 
-      a->player->running = 1;
-  }else a->player->running = 0;
-  if(keystates[SDLK_LEFT])
-  {
-    control_left(a->player);
-  }
-  if(keystates[SDLK_RIGHT])
-  {
-    control_right(a->player);
-  }
-  while( SDL_PollEvent( &event ) ) {
-    switch (event.type) {
-
-      case SDL_KEYUP:
-        {
-          switch(event.key.keysym.sym )
-          {
-            case SDLK_UP:
-              {
-                a->player->buttonHold = 0;
-                a->player->stepCounter = 0;
-                break;
-              }
-            default:
-            {
-  
-
-              break;
-            }
-          }
-          break;
-        }
-      /*case SDL_KEYDOWN:*/
-      /*{*/
-      /*switch(event.key.keysym.sym )*/
-      /*{*/
-      /*case SDLK_RIGHT: */
-      /*{*/
-      /*a->posRect.x += 5;*/
-      /*break;*/
-      /*}*/
-      /*case SDLK_LEFT: */
-      /*{*/
-      /*a->posRect.x -= 5;*/
-      /*break;*/
-      /*}*/
-
-      /*}*/
-      /*break;*/
-      /*}*/
-      case SDL_QUIT:
-        /*case SDL_MOUSEMOTION:*/
-        a->running = 0;
-        break;
-    }
-  }
-}
 
 void GameWorldC::handleCollision(Controllable *a){
   int i,sum = 0,coll = 0;
@@ -298,86 +196,6 @@ void GameWorldC::handleCollision(Controllable *a){
   }
 }
 
-void handleCollision(DynamicObject *a){
-  int i,sum = 0,coll = 0;
-  for(i=0;i<a->world->staticCount;i++){
-    if((a->x- a->world->staticObjects[i].x)*(a->x-a->world->staticObjects[i].x)+(a->y-a->world->staticObjects[i].y)*(a->y-a->world->staticObjects[i].y)<8192)
-    {
-      coll = checkCollisionDS(a,&a->world->staticObjects[i]);
-      if(coll)
-      { 
-        if(a->world->staticObjects[i].type == 2003)
-        {
-            if(a->climbing)
-            {
-              setStateD(a,Climbing);
-              if(a->x - a->world->staticObjects[i].x>3) a->xSpeed = -5;
-              else if(a->x - a->world->staticObjects[i].x<-3) a->xSpeed = 5;
-              else 
-              {
-                a->xSpeed = 0;
-                a->x = a->world->staticObjects[i].x;
-              }
-            }
-            sum+=coll;
-            if(!a->climbing) a->climbing = 1;
-            a->inAir = 1;
-        }
-        else
-        {
-          if(coll==1)
-          {
-            if(a->inAir && (a->climbing!=2 || a->ySpeed>0))
-            {
-              a->ySpeed =0;
-              a->inAir=0;
-              a->y = a->world->staticObjects[i].y-a->collisionRect.h-a->colOffY;
-            } 
-            sum+=coll;
-          }
-          if(coll==2)
-          {
-            a->xSpeed=0;
-            a->x = a->world->staticObjects[i].x+a->world->staticObjects[i].w-a->collisionRect.w;
-          }
-          if(coll==3)
-          {
-            a->xSpeed=0;
-            a->x = a->world->staticObjects[i].x-a->w+a->colOffX-0.1;
-          }
-          if(coll==4)
-          {
-            if(a->inAir)
-            {
-              a->ySpeed = 0;
-              a->y = a->world->staticObjects[i].y+a->world->staticObjects[i].w-a->colOffY;
-              a->buttonHold = 0;
-            }
-            else
-            {
-              a->ySpeed = 0;  
-            }
-          }
-          if(coll==20 || coll==30)
-          {
-            if(!a->inAir)
-            {
-              setSpeedD(a,a->xSpeed,0);
-              a->y = a->world->staticObjects[i].y-a->collisionRect.h-a->colOffY;
-            }
-          }
-        }
-      }
-    }
-  }
-  if(!sum)
-  {
-     a->inAir=1;
-     a->climbing=0;
-  }
-  printf("%d\n",coll);
-  printf("|a->ySpeed: %.2f . a->xSpeed: %.2f .a->inAir: %d. a->climbing: %d. \n",a->ySpeed,a->xSpeed,a->inAir,a->climbing);
-}
 
 void handleAI(Controllable *a)
 {
@@ -413,39 +231,6 @@ void handleAI(Controllable *a)
   }
 }
 
-void handleAI(DynamicObject *a)
-{
-  if(a->stateAI==Idle)
-  {
-    if(!(rand()%30))
-    {  
-      if(rand()%2)
-        a->stateAI = WalkingLeft;
-      else
-        a->stateAI = WalkingRight;
-    }
-  }
-  if(a->stateAI==WalkingRight)
-  {
-      if(!(rand()%20))
-        a->stateAI = Idle;
-      else
-        control_right(a);
-        if(!(rand()%6)) control_jump(a);
-        control_right(a);
-        control_right(a);
-  }
-  if(a->stateAI==WalkingLeft)
-  {
-      if(!(rand()%20))
-        a->stateAI = Idle;
-      else
-        control_left(a);
-        if(!(rand()%6)) control_jump(a);
-        control_left(a);
-        control_left(a);
-  }
-}
 
 void GameWorldC::worldStep()
 {
@@ -475,32 +260,6 @@ void GameWorldC::worldStep()
   player->animate();
 }
 
-void worldStep(GameWorld * a, int gameSpeed)
-{
-  int i;
-  handleInput(a);
-  handleCollision(a->player);
-  stepD(a->player, gameSpeed);
-  moveCamera(a->cam);
-  for(i=2;i>=0;i--)
-  {  
-    drawBackground(&a->bg[i],a->cam);
-  }
-  for(i=0;i<a->staticCount;i++)
-  {
-    /*printf ( "%d\n",i );*/
-    drawS(&(a->staticObjects[i]),a->cam);
-  }
-  for(i=0;i<a->dynamicCount;i++)
-  {
-    handleAI(&(a->dynamicObjects[i]));
-    handleCollision(&(a->dynamicObjects[i]));
-    stepD(&(a->dynamicObjects[i]),gameSpeed);
-    drawD(&(a->dynamicObjects[i]),a->cam, gameSpeed);
-  }
-  drawD(a->player, a->cam, gameSpeed);
-  /*SDL_Delay(200);*/
-}
 
 GameWorldC::GameWorldC(char *map)
 {
@@ -592,91 +351,3 @@ GameWorldC::GameWorldC(char *map)
 
 }
 
-int loadMap(char *map, GameWorld * a)
-{
-  FILE *mapFile;
-  int object_id;
-  char path[80];
-  char line[100];
-  int object,index,x=0,y=0;
-  char del;
-  SDL_Surface *tempSurface;
-  SDL_Surface *tempSurfaceOpt;
-
-  SDL_Surface *kosanText ;
-  kosanText = SDL_DisplayFormat(IMG_Load("./res/gfx/kosan.gif"));
-
-  srand(time(NULL));
-
-  mapFile = fopen(map, "r");
-  if(mapFile == NULL)
-    return 1; //dosya okuma hatasi
-
-  printf("Reading map file: %s\n",map);
-  sscanf(fgets(line, 100, mapFile),"%d %s %c",&object_id,path,&del);
-  while((char)del != '!')
-  {
-    tempSurface = (IMG_Load(path));
-    tempSurfaceOpt = SDL_DisplayFormat(tempSurface);
-    textures[object_id] = *tempSurfaceOpt;   
-    sscanf(fgets(line, 100, mapFile),"%d %s %c",&object_id,path,&del);
-  }
-
-  object = fgetc(mapFile);
-  while(object != EOF)
-  {
-    /*printf ( "%d\n",staticCount );*/
-    object = fgetc(mapFile);
-    if(object<58 && object>48 )
-    {
-      index = object-48;
-      
-      /*printf ( "%c %d\n",object,object );*/
-      if(index==5)
-        createS(&a->staticObjects[a->staticCount],64*x,64*y-32,64,64,&textures[index],index);
-      else if(index==4)
-        createS(&a->staticObjects[a->staticCount],64*x,64*y-16,64,64,&textures[index],index);
-      else
-        createS(&a->staticObjects[a->staticCount],64*x,64*y,64,64,&textures[index],index);
-      if(index==3)
-        setColRectS(&a->staticObjects[a->staticCount],16,48,32,8);
-      a->staticCount++;
-    }
-    else if((char)object == '|')
-    {
-      x=0;
-      y++;
-    }
-    else if((char)object == '@')
-    {
-      createD(&kosan,64*x,64*y,64,64,kosanText);
-      cameraInit(&cam, &kosan, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT,380,380,270,270);
-      setColRectD(&kosan,22,14,20,50);
-    }
-    else if((char)object == 'U')
-    {
-      createD(&a->dynamicObjects[a->dynamicCount],64*x,64*y,64,64,kosanText);
-      setColRectD(&a->dynamicObjects[a->dynamicCount],22,14,20,50);
-      a->dynamicObjects[a->dynamicCount].world = a;
-      a->dynamicCount++;
-    }
-    else if((char)object == '*')
-    {
-      break;
-    }
-    x++;
-  }
-  fclose(mapFile);
-
-  a->running = 1;
-  a->cam = &cam;
-  addBackground(a,500,500,&textures[2],2,-1,-1);
-  addBackground(a,600,500,&textures[6],1,-1,120);
-  addBackground(a,499,500,&textures[7],0,-1,150);
-  a->player = &kosan;
-  kosan.world = a;
-  settings.gravity = 3;
-  a->settings = &settings;
-  return 0;
-
-}
