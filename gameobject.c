@@ -338,7 +338,7 @@ void Controllable::step3()
             }
           default:
             {
-              if(running) objState = Running;
+              if(xSpeed>6 || xSpeed<-6) objState = Running;
               else objState = Walking;
               break;
             }

@@ -58,8 +58,8 @@ void GameWorldC::handleInput()
   if(keystates[SDLK_LSHIFT])
   {
     if(player->stamina>0) 
-      player->running = 1;
-  }else player->running = 0;
+      player->objState = Running;
+  }else player->objState = Walking;
   if(keystates[SDLK_LEFT])
   {
     player->control_left();
