@@ -80,8 +80,8 @@ int main(int argc, const char *argv[])
     worldC.worldStep();
     t1 = SDL_GetTicks();
     gameSpeed = t1 - t0;
-    if(gameSpeed < (1000/30))
-      SDL_Delay((1000 / 30) - gameSpeed);
+    if(gameSpeed < (1000/60))
+      SDL_Delay((1000 / 60) - gameSpeed);
     t0 = SDL_GetTicks();
     SDL_Flip(screen);
   } 

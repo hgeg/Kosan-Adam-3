@@ -237,9 +237,7 @@ void GameWorldC::worldStep()
   int i;
   handleInput();
   /*handleCollision(player);*/
-  printf ( "y %f\n",player->y );
   player->step3();
-  printf ( "y %f\n",player->y );
   cam->moveCamera();
   for(i=2;i>=0;i--)
   {  
@@ -349,7 +347,15 @@ GameWorldC::GameWorldC(char *map)
   addBackground(600,500,&textures[6],1,-1,120);
   addBackground(499,500,&textures[7],0,-1,150);
   player->world = this;
-  settings.gravity = 3;
+  settings.gravity = 1.5;
+  settings.airFriction = 0.3;
+  settings.groundFriction = 0.7;
+  settings.ySpeedTerminal=  25;
+  settings.yJumpSpeed = 8;
+  settings.xSpeedRunning = 9.5;
+  settings.xSpeedWalking = 5.5;
+  settings.xAcceleration = 1.5;
+  settings.yClimbingSpeed = 6;
 
 }
 
