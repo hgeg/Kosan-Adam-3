@@ -138,10 +138,12 @@ void Controllable::control_right()
    if(objState==Running) tSpeed= world->settings.xSpeedRunning;
    else tSpeed = world->settings.xSpeedWalking;
 
+   if(objState==Climbing)
+     xSpeed += 5 + world->settings.yClimbingSpeed;
+   
    if(xSpeed<tSpeed)
-      setSpeed(xSpeed+world->settings.xAcceleration,ySpeed);
-      direction=0;
-   if(climbing) climbing = 0;
+     setSpeed(xSpeed+world->settings.xAcceleration,ySpeed);
+     direction=0;
 }
 void Controllable::control_left()
 {
@@ -151,27 +153,26 @@ void Controllable::control_left()
      tSpeed= 0 - world->settings.xSpeedRunning;
    }
    else tSpeed = 0 -world->settings.xSpeedWalking;
-
-    if(xSpeed>tSpeed)
-      setSpeed(xSpeed-world->settings.xAcceleration,ySpeed);
-      direction = 1;
-    if(climbing) 
-      setState(AnimIdle);
-      climbing = 0;
+   
+   if(objState==Climbing)
+     xSpeed -= 5 + world->settings.yClimbingSpeed;
+   
+   if(xSpeed>tSpeed)
+     setSpeed(xSpeed-world->settings.xAcceleration,ySpeed);
+     direction = 1;
 }
 
 void Controllable::control_jump2()
 {
     if(((objState == Walking || objState == Running) || buttonHold))
     {
-      ySpeed = - world->settings.yJumpSpeed;
       buttonHold = 1;
       stepCounter++;
-      if(stepCounter == jumpSteps)
+      if(stepCounter >= jumpSteps)
       {
         buttonHold = 0;
-        stepCounter = 0;
       }
+      else ySpeed = - world->settings.yJumpSpeed;
     }
     if(objState == Climbing)
     {
@@ -217,6 +218,16 @@ void Controllable::step3()
       {
         case 2003: //climb
         {
+          if(objState==Climbing)
+          {
+            if(x - world->staticObjects[i].x>3) xSpeed = -5;
+            else if(x - world->staticObjects[i].x<-3) xSpeed = 5;
+            else 
+            {
+              xSpeed = 0;
+              x = world->staticObjects[i].x;
+            }
+          }
           if(objState == InAir)
             objState = Climbing;
           break;
@@ -240,8 +251,6 @@ void Controllable::step3()
       {
         case 2003: //climb
         {
-          if(objState == InAir)
-            objState = Climbing;
           break;
         }
         default:
@@ -414,10 +423,18 @@ void Controllable::step3()
         setSpeed(xSpeed,0);
       else
         setSpeed(0,0);
+      //ySpeed
+      if(ySpeed<0.5)
+        setSpeed(xSpeed,0);
+      else if(ySpeed>-0.5)
+        setSpeed(xSpeed,0);
+      else
+        setSpeed(0,0);
+
+
       break;
     }
   }
-  printf("State: %d\n", objState);
 
 }
 
@@ -909,7 +926,7 @@ void Controllable::animate()
   }
   else
   {
-    if((objState!=Climbing) || (ySpeed!=0)) animationFrame++;
+    if((objState!=Climbing) || ((objState==Climbing) && (xSpeed!=0 || ySpeed!=0))) animationFrame++;
     clippingRect.y = h*state;
     if(animationFrame%4==0)
       clippingRect.x = (clippingRect.x + w) % imageSurface->w;

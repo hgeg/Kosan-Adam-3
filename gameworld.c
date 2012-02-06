@@ -58,7 +58,7 @@ void GameWorldC::handleInput()
   if(keystates[SDLK_LSHIFT])
   {
     if(player->stamina>0) 
-      player->objState = Running;
+      if(player->objState==Walking) player->objState = Running;
   }
   if(keystates[SDLK_LEFT])
   {
@@ -250,7 +250,7 @@ void GameWorldC::worldStep()
   for(i=0;i<dynamicCount;i++)
   {
     handleAI(&(dynamicObjects[i]));
-    dynamicObjects[i].step();
+    dynamicObjects[i].step3();
     dynamicObjects[i].draw();
     dynamicObjects[i].animate();
   }
@@ -309,7 +309,7 @@ GameWorldC::GameWorldC(char *map)
       else
         staticObjects[staticCount] = GameObject(64*x,64*y,64,64,&textures[index],index);
       if(index==3)
-        staticObjects[staticCount].setColRect(16,16,32,64);
+        staticObjects[staticCount].setColRect(8,48,48,64);
 
       staticObjects[staticCount].world = this;
       staticCount++;
@@ -349,12 +349,12 @@ GameWorldC::GameWorldC(char *map)
   settings.gravity = 1.4;
   settings.airFriction = 0.2;
   settings.groundFriction = 0.4;
-  settings.ySpeedTerminal=  25;
+  settings.ySpeedTerminal=  15;
   settings.yJumpSpeed = 8;
   settings.xSpeedRunning = 7.5;
   settings.xSpeedWalking = 5.0;
   settings.xAcceleration = 1.2;
-  settings.yClimbingSpeed = 6;
+  settings.yClimbingSpeed = 5.5;
 
 }
 
