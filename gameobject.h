@@ -81,8 +81,12 @@ class Controllable : public GameObject
   int collision(GameObject *b);
   int  checkCollision(GameObject *b);
   int checkBottom(GameObject *b);
+  int checkTop(GameObject *b);
+  int checkLeft(GameObject *b);
+  int checkRight(GameObject *b);
   void  resolveCollision(GameObject * obj);
   void  step2();
+  void  step3();
 
   void control_down();
   void control_right();

@@ -237,9 +237,9 @@ void GameWorldC::worldStep()
   int i;
   handleInput();
   /*handleCollision(player);*/
-  printf ( "y %f\n",player->x );
-  player->step2();
-  printf ( "y %f\n",player->x );
+  printf ( "y %f\n",player->y );
+  player->step3();
+  printf ( "y %f\n",player->y );
   cam->moveCamera();
   for(i=2;i>=0;i--)
   {  
