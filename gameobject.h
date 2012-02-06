@@ -63,7 +63,6 @@ class Controllable : public GameObject
   float xSpeed, ySpeed;
   int inAir;
   int climbing;
-  int running;
   int direction;
 
   int jumpSteps;

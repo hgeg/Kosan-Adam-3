@@ -59,7 +59,7 @@ void GameWorldC::handleInput()
   {
     if(player->stamina>0) 
       player->objState = Running;
-  }else player->objState = Walking;
+  }
   if(keystates[SDLK_LEFT])
   {
     player->control_left();
@@ -215,7 +215,7 @@ void handleAI(Controllable *a)
         a->stateAI = AnimIdle;
       else
         a->control_right();
-        if(!(rand()%6)) a->control_jump();
+        if(!(rand()%6)) a->control_jump2();
         a->control_right();
         a->control_right();
   }
@@ -225,7 +225,7 @@ void handleAI(Controllable *a)
         a->stateAI = AnimIdle;
       else
         a->control_left();
-        if(!(rand()%6)) a->control_jump();
+        if(!(rand()%6)) a->control_jump2();
         a->control_left();
         a->control_left();
   }
@@ -235,7 +235,6 @@ void handleAI(Controllable *a)
 void GameWorldC::worldStep()
 {
   int i;
-  handleInput();
   /*handleCollision(player);*/
   player->step3();
   cam->moveCamera();
@@ -251,11 +250,11 @@ void GameWorldC::worldStep()
   for(i=0;i<dynamicCount;i++)
   {
     handleAI(&(dynamicObjects[i]));
-    handleCollision(&(dynamicObjects[i]));
     dynamicObjects[i].step();
     dynamicObjects[i].draw();
     dynamicObjects[i].animate();
   }
+  handleInput();
   player->draw();
   player->animate();
 }
@@ -310,7 +309,7 @@ GameWorldC::GameWorldC(char *map)
       else
         staticObjects[staticCount] = GameObject(64*x,64*y,64,64,&textures[index],index);
       if(index==3)
-        staticObjects[staticCount].setColRect(16,48,32,8);
+        staticObjects[staticCount].setColRect(16,16,32,64);
 
       staticObjects[staticCount].world = this;
       staticCount++;
