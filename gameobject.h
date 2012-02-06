@@ -6,16 +6,25 @@
 
 
 
-enum objectStates 
+enum AnimationStates 
 {
-  Idle = 0,
-  WalkingRight = 1,
-  WalkingLeft = 2,
-  JumpingRight = 3,
-  JumpingLeft = 4,
-  Climbing = 5,
-  RunningLeft = 6,
-  RunningRight = 7 
+  AnimIdle = 0,
+  AnimWalkingRight = 1,
+  AnimWalkingLeft = 2,
+  AnimJumpingRight = 3,
+  AnimJumpingLeft = 4,
+  AnimClimbing = 5,
+  AnimRunningLeft = 6,
+  AnimRunningRight = 7 
+};
+
+enum ObjectStates 
+{
+  InAir = 0,
+  Walking = 1,
+  Running = 2,
+  Climbing = 3,
+  Idle = 4
 };
 
 class GameWorldC;
@@ -30,6 +39,7 @@ class GameObject{
   int colOffX;
   int colOffY;
   int state;
+  int objState;
 
   SDL_Surface *imageSurface;
   SDL_Rect posRect;
@@ -68,12 +78,17 @@ class Controllable : public GameObject
   void step();
   void setSpeed( float xs, float ys);
   void setState(int s);
+  int collision(GameObject *b);
   int  checkCollision(GameObject *b);
+  int checkBottom(GameObject *b);
+  void  resolveCollision(GameObject * obj);
+  void  step2();
 
   void control_down();
   void control_right();
   void control_left();
   void control_jump();
+  void control_jump2();
 
   Controllable();
   Controllable(const Controllable& temp);

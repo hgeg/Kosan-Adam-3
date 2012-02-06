@@ -44,7 +44,7 @@ void GameWorldC::handleInput()
   Uint8 * keystates = SDL_GetKeyState(NULL);
   if(keystates[SDLK_UP])
   {
-    player->control_jump();
+    player->control_jump2();
   }
   if(keystates[SDLK_DOWN])
   {
@@ -129,7 +129,7 @@ void GameWorldC::handleCollision(Controllable *a){
         {
             if(a->climbing)
             {
-              a->setState(Climbing);
+              a->setState(AnimClimbing);
               if(a->x - a->world->staticObjects[i].x>3) a->xSpeed = -5;
               else if(a->x - a->world->staticObjects[i].x<-3) a->xSpeed = 5;
               else 
@@ -199,30 +199,30 @@ void GameWorldC::handleCollision(Controllable *a){
 
 void handleAI(Controllable *a)
 {
-  if(a->stateAI==Idle)
+  if(a->stateAI==AnimIdle)
   {
     if(!(rand()%30))
     {  
       if(rand()%2)
-        a->stateAI = WalkingLeft;
+        a->stateAI = AnimWalkingLeft;
       else
-        a->stateAI = WalkingRight;
+        a->stateAI = AnimWalkingRight;
     }
   }
-  if(a->stateAI==WalkingRight)
+  if(a->stateAI==AnimWalkingRight)
   {
       if(!(rand()%20))
-        a->stateAI = Idle;
+        a->stateAI = AnimIdle;
       else
         a->control_right();
         if(!(rand()%6)) a->control_jump();
         a->control_right();
         a->control_right();
   }
-  if(a->stateAI==WalkingLeft)
+  if(a->stateAI==AnimWalkingLeft)
   {
       if(!(rand()%20))
-        a->stateAI = Idle;
+        a->stateAI = AnimIdle;
       else
         a->control_left();
         if(!(rand()%6)) a->control_jump();
@@ -236,8 +236,10 @@ void GameWorldC::worldStep()
 {
   int i;
   handleInput();
-  handleCollision(player);
-  player->step();
+  /*handleCollision(player);*/
+  printf ( "y %f\n",player->x );
+  player->step2();
+  printf ( "y %f\n",player->x );
   cam->moveCamera();
   for(i=2;i>=0;i--)
   {  

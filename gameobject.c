@@ -11,6 +11,7 @@
 #include "gk.h"
 #include "background.h"
 #include "gameworld.h"
+#include "math.h"
 
 
 void GameObject::setPos(float xx, float yy)
@@ -63,12 +64,15 @@ Controllable::Controllable(const Controllable& temp)
   health         = temp.health;
   stamina        = temp.stamina;
   stateAI        = temp.stateAI;
+  objState        = temp.objState;
 
 }
 
 Controllable::Controllable (int xx, int yy, int ww, int hh, SDL_Surface *i)
 :GameObject()
 {
+
+  objState = InAir;
 
   x = xx;
   y = yy;
@@ -83,12 +87,12 @@ Controllable::Controllable (int xx, int yy, int ww, int hh, SDL_Surface *i)
   colOffX = 0;
   colOffY = 0;
 
-  xSpeed = 0;
-  ySpeed = 0;
+  xSpeed = 1;
+  ySpeed = 1;
 
   type = 0;
-  state = JumpingRight;
-  stateAI = Idle;
+  state = AnimJumpingRight;
+  stateAI = AnimIdle;
   inAir = 1;
   climbing = 0;
   direction = 0;
@@ -151,10 +155,28 @@ void Controllable::control_left()
       setSpeed(xSpeed-3,ySpeed);
     direction = 1;
     if(climbing) 
-      setState(Idle);
+      setState(AnimIdle);
       climbing = 0;
 }
 
+void Controllable::control_jump2()
+{
+    if(((objState == Walking || objState == Running) || buttonHold))
+    {
+      ySpeed = -16;
+      buttonHold = 1;
+      stepCounter++;
+      if(stepCounter == jumpSteps)
+      {
+        buttonHold = 0;
+        stepCounter = 0;
+      }
+    }
+    if(objState == Climbing)
+    {
+      ySpeed = -12;
+    }
+}
 void Controllable::control_jump()
 {
     if(((!inAir) || buttonHold) && (!climbing))
@@ -175,6 +197,182 @@ void Controllable::control_jump()
     }
 }
 
+void Controllable::resolveCollision(GameObject * obj)
+{
+  float speed;
+  float xStep,yStep;
+  speed = sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
+  xStep = xSpeed / speed;
+  yStep = ySpeed / speed;
+
+  x = x - xStep;
+  y = y - yStep;
+  collisionRect.x = x + colOffX;
+  collisionRect.y = y + colOffY;
+
+  while(collision(obj))
+  {
+    x = x - xStep;
+    y = y - yStep;
+    collisionRect.x = x + colOffX;
+    collisionRect.y = y + colOffY;
+  }
+
+}
+
+void Controllable::step2()
+{
+  x = x + xSpeed;
+  y = y + ySpeed;
+
+  collisionRect.x = x + colOffX;
+  collisionRect.y = y + colOffY;
+
+  for (int i = 0; i < world->staticCount; i++) 
+  {
+    if(collision(&world->staticObjects[i]))
+    {
+      switch(world->staticObjects[i].type)
+      {
+        case 2003: //climb
+        {
+          if(objState == InAir)
+            objState = Climbing;
+          break;
+        }
+        default:
+        {
+          resolveCollision(&world->staticObjects[i]);
+          break;
+        }
+      }
+
+    }
+  }
+
+  if(objState != Climbing)
+  {
+    objState  = InAir;
+    for (int i = 0; i < world->staticCount; i++) 
+    {
+      if(checkBottom(&world->staticObjects[i]))
+      {
+        switch(world->staticObjects[i].type)
+        {
+          case 2003: //climb
+            {
+              break;
+            }
+          default:
+            {
+              objState = Walking;
+              break;
+            }
+        }
+
+      }
+    }
+
+  }
+
+
+
+  switch(objState)
+  {
+    case InAir:
+    {
+      //animation
+      if(xSpeed>0)
+      {
+        setState(AnimJumpingRight);        
+      }
+      else if(xSpeed<0)
+      { 
+        setState(AnimJumpingLeft);
+      }
+      else
+        if(direction) setState(AnimJumpingLeft);
+        else setState(AnimJumpingRight);
+
+
+      //ySpeed
+      ySpeed = ySpeed + world->settings.gravity; 
+      if(ySpeed>50) ySpeed = 50; //terminal velocity;
+      else if(ySpeed<-50) ySpeed = -50;
+
+      //xSpeed
+      if(xSpeed>1)
+        setSpeed(xSpeed-0.6,ySpeed);
+      else if(xSpeed<-1)
+        setSpeed(xSpeed+0.6,ySpeed);
+      else
+        setSpeed(0,ySpeed);
+
+      break;
+    }
+    case Walking:
+    {
+      //animation
+      if(xSpeed>0.0001)
+          setState(AnimWalkingRight);
+      else if(xSpeed<-0.0001)
+          setState(AnimWalkingLeft);
+      else
+        setState(AnimIdle);
+
+
+      //ySpeed
+      ySpeed = 0;
+      //xSpeed
+      if(xSpeed>1)
+        setSpeed(xSpeed-1.4,ySpeed);
+      else if(xSpeed<-1)
+        setSpeed(xSpeed+1.4,ySpeed);
+      else
+        setSpeed(0,ySpeed);
+
+
+      break;
+    }
+    case Running:
+    {
+      //animation
+      if(xSpeed>0.0001)
+          setState(AnimRunningRight);
+      else if(xSpeed<-0.0001)
+          setState(AnimRunningLeft);
+      else
+        setState(AnimIdle);
+
+      //ySpeed
+      ySpeed = 0;
+      //xSpeed
+      if(xSpeed>1)
+        setSpeed(xSpeed-1.4,ySpeed);
+      else if(xSpeed<-1)
+        setSpeed(xSpeed+1.4,ySpeed);
+      else
+        setSpeed(0,ySpeed);
+
+      break;
+    }
+    case Climbing:
+    {
+      //animation
+      setState(AnimClimbing);
+      //xSpeed
+      if(xSpeed>1)
+        setSpeed(xSpeed,ySpeed);
+      else if(xSpeed<-1)
+        setSpeed(xSpeed,ySpeed);
+      else
+        setSpeed(0,ySpeed);
+      break;
+    }
+  }
+
+
+}
 void Controllable::step()
 {
   /*update state*/
@@ -199,15 +397,15 @@ void Controllable::step()
       ySpeed = ySpeed + world->settings.gravity; 
     if(xSpeed>0)
     {
-      setState(JumpingRight);        
+      setState(AnimJumpingRight);        
     }
     else if(xSpeed<0)
     { 
-      setState(JumpingLeft);
+      setState(AnimJumpingLeft);
     }
     else
-      if(direction) setState(JumpingLeft);
-      else setState(JumpingRight);
+      if(direction) setState(AnimJumpingLeft);
+      else setState(AnimJumpingRight);
     if(ySpeed>50) ySpeed = 50; //terminal velocity;
     else if(ySpeed<-50) ySpeed = -50;
   }
@@ -215,16 +413,16 @@ void Controllable::step()
   {
     if(xSpeed>0.0001)
       if(!running)
-        setState(WalkingRight);
+        setState(AnimWalkingRight);
       else 
-        setState(RunningRight);
+        setState(AnimRunningRight);
     else if(xSpeed<-0.0001)
       if(!running)
-        setState(WalkingLeft);
+        setState(AnimWalkingLeft);
       else 
-        setState(RunningLeft);
+        setState(AnimRunningLeft);
     else
-      setState(Idle);
+      setState(AnimIdle);
   }
   if(inAir)
   {
@@ -258,7 +456,7 @@ void Controllable::step()
   }
   if(climbing)
   {
-     setState(Climbing);
+     setState(AnimClimbing);
      if(ySpeed>3)
       setSpeed(xSpeed,ySpeed-5);
     else if(ySpeed<-3)
@@ -278,6 +476,63 @@ void Controllable::step()
 
 
 }
+
+int Controllable::checkBottom(GameObject *b)
+{
+
+  float pointX, pointY;
+  float  leftB;
+  float  rightB;
+  float  topB;
+  float  bottomB;
+
+  pointX = collisionRect.x + collisionRect.w /2;
+  pointY = collisionRect.y + collisionRect.h + 1;
+
+  leftB = b->collisionRect.x;
+  rightB =b->collisionRect.x+b->collisionRect.w;
+  topB = b->collisionRect.y;
+  bottomB = b->collisionRect.y + b->collisionRect.h;
+
+  if (pointY < topB) return 0;
+  if (pointY > bottomB) return 0;
+
+  if (pointX < leftB) return 0;
+  if (pointX > rightB) return 0;
+
+  return 1;
+} 
+
+int Controllable::collision(GameObject *b)
+{
+
+  float leftA, leftB;
+  float rightA, rightB;
+  float topA, topB;
+  float bottomA, bottomB;
+
+  leftA = collisionRect.x;
+  rightA = collisionRect.x+collisionRect.w;
+  topA = collisionRect.y;
+  bottomA = collisionRect.y + collisionRect.h;
+
+  leftB = b->collisionRect.x;
+  rightB =b->collisionRect.x+b->collisionRect.w;
+  topB = b->collisionRect.y;
+  bottomB = b->collisionRect.y + b->collisionRect.h;
+
+  if (bottomA < topB) return 0;
+  if (topA > bottomB) return 0;
+
+  if (rightA < leftB) return 0;
+  if (leftA > rightB) return 0;
+
+  printf ( "A: %f %f %f %f\n",leftA, rightA, topA, bottomA );
+  printf ( "B: %f %f %f %f\n",leftB, rightB, topB, bottomB );
+
+
+  return 1;
+} 
 
 int Controllable::checkCollision(GameObject *b)
 {
