@@ -139,7 +139,7 @@ void Controllable::control_right()
    else tSpeed = world->settings.xSpeedWalking;
 
    if(objState==Climbing)
-     xSpeed += 5 + world->settings.yClimbingSpeed;
+     xSpeed = 10;
    
    if(xSpeed<tSpeed)
      setSpeed(xSpeed+world->settings.xAcceleration,ySpeed);
@@ -155,7 +155,7 @@ void Controllable::control_left()
    else tSpeed = 0 -world->settings.xSpeedWalking;
    
    if(objState==Climbing)
-     xSpeed -= 5 + world->settings.yClimbingSpeed;
+     xSpeed = -10;
    
    if(xSpeed>tSpeed)
      setSpeed(xSpeed-world->settings.xAcceleration,ySpeed);
@@ -422,17 +422,7 @@ void Controllable::step3()
       else if(xSpeed<-1)
         setSpeed(xSpeed,0);
       else
-        setSpeed(0,0);
-      //ySpeed
-      if(ySpeed<0.5)
-        setSpeed(xSpeed,0);
-      else if(ySpeed>-0.5)
-        setSpeed(xSpeed,0);
-      else
-        setSpeed(0,0);
-
-
-      break;
+        setSpeed(0,0);      break;
     }
   }
 
@@ -920,17 +910,10 @@ void GameObject::animate()
 
 void Controllable::animate()
 {
-  if(climbing && ((!ySpeed) && (!xSpeed))) 
-  {
-    clippingRect.y = h*state;
-  }
-  else
-  {
-    if((objState!=Climbing) || ((objState==Climbing) && (xSpeed!=0 || ySpeed!=0))) animationFrame++;
-    clippingRect.y = h*state;
-    if(animationFrame%4==0)
-      clippingRect.x = (clippingRect.x + w) % imageSurface->w;
-  }
+  if((objState!=Climbing) || ((objState==Climbing) && (xSpeed!=0 || ySpeed!=0))) animationFrame++;
+  clippingRect.y = h*state;
+  if(animationFrame%4==0)
+    clippingRect.x = (clippingRect.x + w) % imageSurface->w;
 }
 
 void GameObject::draw(){
