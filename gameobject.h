@@ -15,7 +15,9 @@ enum AnimationStates
   AnimJumpingLeft = 4,
   AnimClimbing = 5,
   AnimRunningLeft = 6,
-  AnimRunningRight = 7 
+  AnimRunningRight = 7, 
+  AnimLeaningRight = 8,
+  AnimLeaningLeft = 9 
 };
 
 enum ObjectStates 
@@ -35,6 +37,7 @@ class GameObject{
   int w,h;
   int type;
   int animationFrame;
+  int sideColl;
 
   int colOffX;
   int colOffY;

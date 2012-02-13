@@ -47,6 +47,7 @@ Controllable::Controllable(const Controllable& temp)
   animationFrame = temp.animationFrame;
   colOffX        = temp.colOffX;
   colOffY        = temp.colOffY;
+  sideColl       = temp.sideColl;
   imageSurface   = temp.imageSurface;
   posRect        = temp.posRect;
   collisionRect  = temp.collisionRect;
@@ -95,6 +96,7 @@ Controllable::Controllable (int xx, int yy, int ww, int hh, SDL_Surface *i)
   inAir = 1;
   climbing = 0;
   direction = 0;
+  sideColl = 0;
   
   collisionRect.x = x;
   collisionRect.y = y;
@@ -138,6 +140,8 @@ void Controllable::control_right()
    if(objState==Running) tSpeed= world->settings.xSpeedRunning;
    else tSpeed = world->settings.xSpeedWalking;
 
+   if(sideColl==1) sideColl=0;
+   
    if(objState==Climbing)
      xSpeed = world->settings.xSpeedWalking;
    
@@ -153,6 +157,8 @@ void Controllable::control_left()
      tSpeed= 0 - world->settings.xSpeedRunning;
    }
    else tSpeed = 0 -world->settings.xSpeedWalking;
+   
+   if(sideColl==2) sideColl=0;
    
    if(objState==Climbing)
      xSpeed = -world->settings.xSpeedRunning;
@@ -281,6 +287,7 @@ void Controllable::step3()
           while(checkLeft(&world->staticObjects[i]))
           {
             xSpeed = 0;
+            sideColl = 1;
             x++;
             collisionRect.x = x + colOffX;
           }
@@ -303,6 +310,7 @@ void Controllable::step3()
           while(checkRight(&world->staticObjects[i]))
           {
             xSpeed = 0;
+            sideColl = 2;
             x--;
             collisionRect.x = x + colOffX;
           }
@@ -376,8 +384,14 @@ void Controllable::step3()
       else if(xSpeed<-0.0001)
           setState(AnimWalkingLeft);
       else
-        setState(AnimIdle);
-
+      {
+        if(sideColl==2)
+          setState(AnimLeaningRight);
+        else if(sideColl==1)
+          setState(AnimLeaningLeft);
+        else
+          setState(AnimIdle);
+      }
 
       //ySpeed
       ySpeed = 0;
@@ -398,7 +412,14 @@ void Controllable::step3()
       else if(xSpeed<-0.0001)
           setState(AnimRunningLeft);
       else
-        setState(AnimIdle);
+      {
+        if(sideColl==2)
+          setState(AnimLeaningRight);
+        else if(sideColl==1)
+          setState(AnimLeaningLeft);
+        else
+          setState(AnimIdle);
+      }
 
       //ySpeed
       ySpeed = 0;

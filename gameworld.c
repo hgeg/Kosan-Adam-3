@@ -59,7 +59,7 @@ void GameWorldC::handleInput()
   {
     if(player->stamina>0) 
       if(player->objState==Walking) player->objState = Running;
-  }
+  }else if(player->objState!=Climbing) player->objState = Walking;
   if(keystates[SDLK_LEFT])
   {
     player->control_left();
@@ -231,7 +231,6 @@ void handleAI(Controllable *a)
   }
 }
 
-
 void GameWorldC::worldStep()
 {
   int i;
@@ -249,8 +248,8 @@ void GameWorldC::worldStep()
   }
   for(i=0;i<dynamicCount;i++)
   {
-    handleAI(&(dynamicObjects[i]));
     dynamicObjects[i].step3();
+    handleAI(&(dynamicObjects[i]));
     dynamicObjects[i].draw();
     dynamicObjects[i].animate();
   }
