@@ -27,9 +27,8 @@ unsigned int                 SCREEN_BPP = 32;
 unsigned int                 SCREEN_WIDTH = 800;
 unsigned int                 SCREEN_HEIGHT = 600;
 int                          SURF_TYPE =  SDL_DOUBLEBUF | SDL_HWSURFACE;
-static int                          gameSpeed = 10;
+static int                   gameSpeed = 10;
 
-//harita yukleyici
 
 static void init(void) {
   srand( time(NULL) );
