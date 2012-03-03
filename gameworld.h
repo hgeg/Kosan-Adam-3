@@ -1,6 +1,7 @@
 #ifndef GAMEWORLD_H
 #define GAMEWORLD_H
 
+
 class GameWorldC
 {
   public:
@@ -10,6 +11,7 @@ class GameWorldC
     GameSettings settings;
     CameraC * cam;
     BackgroundC  bg[3];
+    SurfaceHandler  surfaces;
     int staticCount;
     int running;
     int dynamicCount;
@@ -28,7 +30,7 @@ class GameWorldC
     int loadMap(char *map);
 
     GameWorldC(Controllable * player, CameraC * cam);
-    GameWorldC(char *map);
+    GameWorldC(const char *map);
 
 };
 

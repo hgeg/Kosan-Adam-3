@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string>
+using namespace std;
 #include <stdlib.h>
 #include <time.h>
 #include <SDL/SDL.h>
@@ -10,7 +12,9 @@
 #include "gamesettings.h"
 #include "gk.h"
 #include "background.h"
+#include "surfacehandler.h"
 #include "gameworld.h"
+#include <iostream>
 
 static SDL_Surface                  textures[20];
 
@@ -54,6 +58,7 @@ void GameWorldC::handleInput()
   {
     player->setPos(470 , 10);
     player->setSpeed(0,0);
+        running = 0;
   }
   if(keystates[SDLK_LSHIFT])
   {
@@ -259,7 +264,7 @@ void GameWorldC::worldStep()
 }
 
 
-GameWorldC::GameWorldC(char *map)
+GameWorldC::GameWorldC(const char *map)
 {
   FILE *mapFile;
   int object_id;
@@ -267,8 +272,9 @@ GameWorldC::GameWorldC(char *map)
   char line[100];
   int object,index,x=0,y=0;
   char del;
-  SDL_Surface *tempSurface;
-  SDL_Surface *tempSurfaceOpt;
+  GameObject elma("./res/objects/kosan", this);
+  /*SDL_Surface *tempSurface;*/
+  /*SDL_Surface *tempSurfaceOpt;*/
 
   SDL_Surface *kosanText ;
   kosanText = SDL_DisplayFormat(IMG_Load("./res/gfx/kosan.gif"));
@@ -285,9 +291,11 @@ GameWorldC::GameWorldC(char *map)
   sscanf(fgets(line, 100, mapFile),"%d %s %c",&object_id,path,&del);
   while((char)del != '!')
   {
-    tempSurface = (IMG_Load(path));
-    tempSurfaceOpt = SDL_DisplayFormat(tempSurface);
-    textures[object_id] = *tempSurfaceOpt;   
+
+    /*tempSurface =     (IMG_Load(path));*/
+    /*tempSurface =     surfaces.getImage(path);//(IMG_Load(path));*/
+    /*tempSurfaceOpt = SDL_DisplayFormat(tempSurface);*/
+    textures[object_id] = *surfaces.getImage(path);//*tempSurfaceOpt;   
     sscanf(fgets(line, 100, mapFile),"%d %s %c",&object_id,path,&del);
   }
 
@@ -323,6 +331,7 @@ GameWorldC::GameWorldC(char *map)
       player = new Controllable(64*x,64*y,64,64,kosanText);
       cam = new CameraC( player, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT,380,380,270,270);
       player->setColRect(22,14,20,50);
+      player->stamina = 100;
     }
     else if((char)object == 'U')
     {

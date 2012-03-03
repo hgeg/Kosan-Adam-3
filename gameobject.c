@@ -1,10 +1,15 @@
 #include <stdio.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+using namespace std;
 #include <stdlib.h>
 #include <time.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
+#include "surfacehandler.h"
 #include "gameobject.h"
 #include "camera.h"
 #include "gamesettings.h"
@@ -962,6 +967,69 @@ void GameObject::draw(){
 
 GameObject::GameObject()
 {
+
+}
+
+GameObject::GameObject(string path, GameWorldC * wrld)
+{
+  world = wrld;
+  string word;
+  string value;
+
+  ifstream objfile(path.c_str());
+
+  if(objfile.is_open())
+  {
+    while(objfile.good())
+    {
+      objfile >> word;
+      objfile >> value;
+      objfile >> value;
+      if(word == "type"   )
+      {
+      }
+      else if(word == "player" )
+      {
+
+      }
+      else if(word == "texture")
+      {
+        imageSurface = world->surfaces.getImage(value);
+      }
+      else if(word == "w"      )
+      {
+        w = atoi(value.c_str());
+      }
+      else if(word == "h"      )
+      {
+        h = atoi(value.c_str());
+      }
+      else if(word == "coloffX")
+      {
+        colOffX = atoi(value.c_str());
+      }
+      else if(word == "coloffY")
+      {
+        colOffY = atoi(value.c_str());
+      }
+      else if(word == "colW"   )
+      {
+        collisionRect.w = atoi(value.c_str());
+      }
+      else if(word == "colH"   )
+      {
+        collisionRect.h = atoi(value.c_str());
+      }
+
+      /*cout << line << endl;*/
+    }
+  }
+  else
+  {
+    
+  }
+
+
 
 }
 GameObject::GameObject(int x, int y, int w, int h, SDL_Surface *i,int t)

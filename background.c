@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string>
+using namespace std;
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>

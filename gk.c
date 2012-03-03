@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <string>
+using namespace std;
 #include <stdlib.h>
 #include <time.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
+#include "surfacehandler.h"
 #include "gamesettings.h"
 #include "gameobject.h"
 #include "camera.h"
@@ -23,7 +26,7 @@ SDL_Surface* screen   = NULL      ;
 unsigned int                 SCREEN_BPP = 32;
 unsigned int                 SCREEN_WIDTH = 800;
 unsigned int                 SCREEN_HEIGHT = 600;
-int                          SURF_TYPE = SDL_HWSURFACE | SDL_DOUBLEBUF;
+int                          SURF_TYPE =  SDL_DOUBLEBUF | SDL_HWSURFACE;
 static int                          gameSpeed = 10;
 
 //harita yukleyici
@@ -40,7 +43,7 @@ static void init(void) {
 
   printf("SDL initiated\n"); 
 
-screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SURF_TYPE );
+  screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SURF_TYPE );
 }
 
 

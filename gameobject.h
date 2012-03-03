@@ -44,6 +44,7 @@ class GameObject{
   int state;
   int objState;
 
+
   SDL_Surface *imageSurface;
   SDL_Rect posRect;
   SDL_Rect collisionRect;
@@ -57,6 +58,7 @@ class GameObject{
   void setColRect(int x, int y, int w, int h);
   void setPos(float x, float y);
   GameObject();
+  GameObject(string path, GameWorldC * wrld);
   GameObject(int x, int y, int w, int h, SDL_Surface *i,int t);
 };
 
@@ -101,6 +103,13 @@ class Controllable : public GameObject
   Controllable(const Controllable& temp);
   Controllable(int x, int y, int w, int h, SDL_Surface *i);
 };
+
+class Interactable : public GameObject
+{
+	public:
+	virtual void doWhenCollision(Controllable * other);
+};
+
 
 
 #include "camera.h"

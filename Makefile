@@ -1,7 +1,7 @@
 LIBS = -lSDL -lSDL_image -lSDL_mixer -lSDL_ttf 
 FLAGS = -pedantic -O2 -Wall
-CFILES  = gk.c gameobject.c camera.c background.c gameworld.c
-HFILES  = gk.h gameobject.h camera.h background.h gameworld.h
+CFILES  = gk.c gameobject.c camera.c background.c gameworld.c surfacehandler.c
+HFILES  = gk.h gameobject.h camera.h background.h gameworld.h surfacehandler.h
 
 gk: ${CFILES} ${HFILES} 
 	g++ ${CFILES} -o gk ${LIBS}  ${FLAGS}  
