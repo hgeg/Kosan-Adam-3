@@ -1,7 +1,7 @@
 #ifndef SURFACEHANDLER_H
 #define SURFACEHANDLER_H
 
-
+#include <string>
 
 class SurfaceHandler
 {

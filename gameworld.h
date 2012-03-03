@@ -7,6 +7,7 @@ class GameWorldC
   public:
     GameObject staticObjects[300];
     Controllable dynamicObjects[200];
+    GameObject *objects[256];
     Controllable * player;
     GameSettings settings;
     CameraC * cam;

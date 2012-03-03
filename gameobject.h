@@ -33,6 +33,8 @@ class GameWorldC;
 
 class GameObject{
   public:
+  
+  int __class__;
   float x,y;
   int w,h;
   int type;
@@ -58,6 +60,7 @@ class GameObject{
   void setColRect(int x, int y, int w, int h);
   void setPos(float x, float y);
   GameObject();
+  GameObject(const GameObject &g);
   GameObject(string path, GameWorldC * wrld);
   GameObject(int x, int y, int w, int h, SDL_Surface *i,int t);
 };

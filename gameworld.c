@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <string>
-using namespace std;
+#include <iostream>
+#include <sstream>
+#include <fstream>
 #include <stdlib.h>
 #include <time.h>
+
+using namespace std;
+
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
@@ -14,9 +19,7 @@ using namespace std;
 #include "background.h"
 #include "surfacehandler.h"
 #include "gameworld.h"
-#include <iostream>
 
-static SDL_Surface                  textures[20];
 
 GameWorldC::GameWorldC (Controllable * player, CameraC * cam)
 {
@@ -266,97 +269,96 @@ void GameWorldC::worldStep()
 
 GameWorldC::GameWorldC(const char *map)
 {
-  FILE *mapFile;
-  int object_id;
-  char path[80];
-  char line[100];
-  int object,index,x=0,y=0;
-  char del;
+  string line;
+  unsigned int x=0,y=0;
+  unsigned char del;
   /*Controllable * elma = (Controllable *)readObjectFile("./res/objects/kosan", this);*/
   /*GameObject elma("./res/objects/kosan", this);*/
   /*SDL_Surface *tempSurface;*/
   /*SDL_Surface *tempSurfaceOpt;*/
 
-  SDL_Surface *kosanText ;
-  kosanText = SDL_DisplayFormat(IMG_Load("./res/gfx/kosan.gif"));
   dynamicCount = 0;
   staticCount = 0;
 
   srand(time(NULL));
 
-  mapFile = fopen(map, "r");
-  /*if(mapFile == NULL)*/
-    /*return 1; //dosya okuma hatasi*/
+  ifstream loader(map);
+  
+  string sPath;
+  unsigned char symbol;
 
-  printf("Reading map file: %s\n",map);
-  sscanf(fgets(line, 100, mapFile),"%d %s %c",&object_id,path,&del);
-  while((char)del != '!')
+  //background loader
+  int layer,offX,offY;
+  getline(loader,line);
+  while(line!="")
   {
-
-    /*tempSurface =     (IMG_Load(path));*/
-    /*tempSurface =     surfaces.getImage(path);//(IMG_Load(path));*/
-    /*tempSurfaceOpt = SDL_DisplayFormat(tempSurface);*/
-    textures[object_id] = *surfaces.getImage(path);//*tempSurfaceOpt;   
-    sscanf(fgets(line, 100, mapFile),"%d %s %c",&object_id,path,&del);
+  stringstream ss (stringstream::in |stringstream::out);
+    ss << line;
+    ss >> layer >> sPath >> offX >> offY;
+    /*cout << " layer: "<< layer << " path: " << sPath << " offset x: "  <<  offX << " offset y: " << offY << endl;*/
+    addBackground(500,500,surfaces.getImage(sPath),layer,offX,offY);
+    getline(loader,line);
   }
-
-  object = fgetc(mapFile);
-  while(object != EOF)
+  
+  string objPath = "./res/objects/";
+   
+  //object loader
+  getline(loader,line);
+  while(line!="")
   {
-    /*printf ( "%d\n",staticCount );*/
-    object = fgetc(mapFile);
-    if(object<58 && object>48 )
-    {
-      index = object-48;
-      
-      /*printf ( "%c %d\n",object,object );*/
-      if(index==5)
-        staticObjects[staticCount] = GameObject(64*x,64*y-32,64,64,&textures[index],index);
-      else if(index==4)
-        staticObjects[staticCount] = GameObject(64*x,64*y-16,64,64,&textures[index],index);
-      else
-        staticObjects[staticCount] = GameObject(64*x,64*y,64,64,&textures[index],index);
-      if(index==3)
-        staticObjects[staticCount].setColRect(8,48,48,64);
-
-      staticObjects[staticCount].world = this;
-      staticCount++;
-    }
-    else if((char)object == '|')
-    {
-      x=0;
-      y++;
-    }
-    else if((char)object == '@')
-    {
-      /*player = new Controllable(64*x,64*y,64,64,kosanText);*/
-      player = (Controllable *)readObjectFile("./res/objects/kosan", this);
-      player->x = 64*x;
-      player->y = 64*y;
-      cam = new CameraC( player, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT,380,380,270,270);
-      player->setColRect(22,14,20,50);
-      player->stamina = 100;
-    }
-    else if((char)object == 'U')
-    {
-      printf ( "%d\n",dynamicCount );
-      this->dynamicObjects[dynamicCount]= Controllable(64*x,64*y,64,64,kosanText);
-      this->dynamicObjects[dynamicCount].setColRect(22,14,20,50);
-      this->dynamicObjects[dynamicCount].world = this;
-      dynamicCount++;
-    }
-    else if((char)object == '*')
-    {
-      break;
-    }
-    x++;
+  stringstream ss (stringstream::in |stringstream::out);
+    ss << line;
+    ss >> symbol >> sPath;
+    cout << line << endl;
+    /*cout << "symbol " << symbol << endl;*/
+    /*cout << "sPath " << objPath+sPath << endl;*/
+    objects[symbol] = readObjectFile(objPath+sPath,this); 
+    /*cout << symbol << " asdasdasd " << objects[symbol]->__class__ << endl;*/
+    getline(loader,line);
   }
-  fclose(mapFile);
+  while(loader.good())
+  {
+    getline(loader,line);
+    for(x=0;x<line.length();x++)
+    {
+      /*cout << " asdasdasd " << objects['L']->w << endl;*/
+       del = line[x];
+       if(del==' ')
+       {
+         continue;
+       }
+       if(del=='@')
+       {
+        player = new Controllable();
+        *player = *((Controllable *)objects[del]);
+        player->x = x*64;
+        player->y = y*64;
+        cam = new CameraC( player, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT,380,380,270,270);
 
+        continue;
+       }
+       if(objects[del]->__class__)
+       { 
+         /*printf ( "%c hello\n", del );*/
+         dynamicObjects[dynamicCount] = *((Controllable *)objects[del]);
+         dynamicObjects[dynamicCount].x = x*64;
+         dynamicObjects[dynamicCount].y = y*64;
+         dynamicCount++;
+       }
+       else
+       { 
+         staticObjects[staticCount] = *objects[del];
+         staticObjects[staticCount].x = x*64;
+         staticObjects[staticCount].y = y*64;
+         staticCount++;
+         /*cout << staticCount << endl;*/
+       }
+    }
+    x=0;
+    y++;
+  }
+  loader.close();
   running = 1;
-  addBackground(500,500,&textures[2],2,-1,-1);
-  addBackground(600,500,&textures[6],1,-1,120);
-  addBackground(499,500,&textures[7],0,-1,150);
   player->world = this;
   settings.gravity = 1.4;
   settings.airFriction = 0.2;

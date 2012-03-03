@@ -2,9 +2,11 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-using namespace std;
 #include <stdlib.h>
 #include <time.h>
+
+using namespace std;
+
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
@@ -17,7 +19,6 @@ using namespace std;
 #include "background.h"
 #include "gameworld.h"
 #include "math.h"
-
 
 void GameObject::setPos(float xx, float yy)
 {
@@ -38,6 +39,28 @@ void GameObject::step()
 {
 }
 
+GameObject::GameObject(const GameObject& temp)
+{
+  x              = temp.x;
+  y              = temp.y;
+  w              = temp.w;
+  h              = temp.h;
+  __class__      = temp.__class__;
+  type           = temp.type;
+  animationFrame = temp.animationFrame;
+  colOffX        = temp.colOffX;
+  colOffY        = temp.colOffY;
+  sideColl       = temp.sideColl;
+  imageSurface   = temp.imageSurface;
+  posRect        = temp.posRect;
+  collisionRect  = temp.collisionRect;
+  clippingRect   = temp.clippingRect;
+  world          = temp.world;
+  state          = temp.state;
+  objState       = temp.objState;
+}
+
+
 Controllable::Controllable()
 {
 
@@ -48,6 +71,7 @@ Controllable::Controllable(const Controllable& temp)
   y              = temp.y;
   w              = temp.w;
   h              = temp.h;
+  __class__      = temp.__class__;
   type           = temp.type;
   animationFrame = temp.animationFrame;
   colOffX        = temp.colOffX;
@@ -69,7 +93,7 @@ Controllable::Controllable(const Controllable& temp)
   health         = temp.health;
   stamina        = temp.stamina;
   stateAI        = temp.stateAI;
-  objState        = temp.objState;
+  objState       = temp.objState;
 
 }
 
@@ -1119,12 +1143,14 @@ GameObject * readObjectFile(string path, GameWorldC * wrld)
           newObj = new Controllable(path,wrld);
           newObj->xSpeed = 1;
           newObj->ySpeed = 1;
+          newObj->__class__ = 1;
           return newObj;
         }
         else if(value == "Basic")
         {
           GameObject * newObj;
           newObj = new GameObject(path,wrld);
+          newObj->__class__ = 0;
           return newObj;
         }
       }

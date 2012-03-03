@@ -1,19 +1,17 @@
-7 ./res/gfx/city2.gif ;
-6 ./res/gfx/city1.gif ;
-5 ./res/gfx/brick.gif ;
-4 ./res/gfx/brick.gif ;
-3 ./res/gfx/ladder.gif ;
-2 ./res/gfx/sky2.jpg ;
-1 ./res/gfx/brick.gif ;
-0 .                   !
-1                                       U       111111111111111     U 1|
-1                                            U  33 333  3    U        1|
-1   3           1     3                         3   3                 1|
-1   3          111    3 3       11111 11        3  U    U U 3U  U  U 31|
-1   3                 3 3 3 3 3      1111       3    U      3        31|
-1   3        1111111  3 3 3 3 3111     111      3  U U U3   3 U   U  31|
-1 @ 3       111111111   3 3    1111      11     3       3 U    U      1|
-11111111445511111111114141411111111111111111111111111111111111111111111|
-11111111111111111111111111111111111111111111111111111111111111111111111|
-1                                                                     1|
-11111                                                           1111111*
+0 ./res/gfx/city2.gif 1 -1 
+1 ./res/gfx/city1.gif 1 -1
+2 ./res/gfx/sky2.jpg  1  1
+
+@ kosan
+L ladder 
+B brick
+
+@         L
+BBBBBBBBBBL   BBBBBBBBBB  BBBBBBBBBB  BBBBBBBBB  BBBBBBBBBBBBBBBBBBBB
+          L 
+          L
+          L                                           L
+BBBBBBBBBBBBBBBBB  BBBBB  BBBB  BBBBBBBBB  BBBB  BBBBBL    BBBBBBBBBB
+                                                      L
+                      L                               L
+         BBBBBBBBBBBBBL   BBBBBBBBBBBBBBB  BBBBBBBBBBBBBBBBBBBB    BB

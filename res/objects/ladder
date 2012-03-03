@@ -1,0 +1,9 @@
+type = Basic
+texture = ./res/gfx/ladder.gif
+w = 64
+h = 64
+coloffX = 0
+coloffY = 0
+colW = 64
+colH = 64
+
