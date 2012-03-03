@@ -379,6 +379,7 @@ void Controllable::step3()
           }
         default:
           {
+
             if(xSpeed>7 || xSpeed<-7) objState = Running;
             else objState = Walking;
             break;
@@ -815,6 +816,15 @@ int Controllable::checkBottomPlus(GameObject *b)
   rightB =b->collisionRect.x+b->collisionRect.w;
   topB = b->collisionRect.y;
   bottomB = b->collisionRect.y + b->collisionRect.h;
+
+  /*cout << endl << endl;*/
+  /*cout << "pointX "<< pointX << endl;*/
+  /*cout << "pointY "<< pointY << endl;*/
+  /*cout << "leftB "<< leftB << endl;*/
+  /*cout << "rightB "<< rightB << endl;*/
+  /*cout << "topB "<< topB << endl;*/
+  /*cout << "bottomB "<< bottomB << endl;*/
+  /*cout << endl << endl;*/
 
   if (pointY < topB) return 0;
   if (pointY > bottomB) return 0;
