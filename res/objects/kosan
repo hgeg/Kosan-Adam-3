@@ -1,0 +1,10 @@
+type = Controllable
+player = 1
+texture = ./res/gfx/kosan.gif
+w = 64
+h = 64
+coloffX = 22
+coloffY = 14
+colW = 20
+colH = 90
+
