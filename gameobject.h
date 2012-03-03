@@ -43,6 +43,7 @@ class GameObject{
 
   int colOffX;
   int colOffY;
+  int climable;
   int state;
   int objState;
 

@@ -1,5 +1,6 @@
 type = Basic
 texture = ./res/gfx/ladder.gif
+climbable = 1
 w = 64
 h = 64
 coloffX = 0

@@ -41,6 +41,7 @@ void GameObject::step()
 
 GameObject::GameObject(const GameObject& temp)
 {
+  climable = temp.climable;
   x              = temp.x;
   y              = temp.y;
   w              = temp.w;
@@ -67,6 +68,7 @@ Controllable::Controllable()
 }
 Controllable::Controllable(const Controllable& temp)
 {
+  climable = temp.climable;
   x              = temp.x;
   y              = temp.y;
   w              = temp.w;
@@ -100,6 +102,7 @@ Controllable::Controllable(const Controllable& temp)
 Controllable::Controllable (string path, GameWorldC * wrld)
 :GameObject( path, wrld)
 {
+  climable = 0;
   inAir  = 0;
   climbing = 0;
   direction = 0;
@@ -116,6 +119,7 @@ Controllable::Controllable (string path, GameWorldC * wrld)
 Controllable::Controllable (int xx, int yy, int ww, int hh, SDL_Surface *i)
 :GameObject()
 {
+  climable = 0;
 
   objState = InAir;
 
@@ -265,9 +269,9 @@ void Controllable::step3()
   {
     if(checkBottom(&world->staticObjects[i]))
     {
-      switch(world->staticObjects[i].type)
+      switch(world->staticObjects[i].climable)
       {
-        case 2003: //climb
+        case 1: //climb
         {
           if(objState==Climbing)
           {
@@ -298,9 +302,9 @@ void Controllable::step3()
     }
     else if(checkTop(&world->staticObjects[i]))
     {
-      switch(world->staticObjects[i].type)
+      switch(world->staticObjects[i].climable)
       {
-        case 2003: //climb
+        case 1: //climb
         {
           break;
         }
@@ -319,9 +323,9 @@ void Controllable::step3()
     }
     else if(checkLeft(&world->staticObjects[i]))
     {
-      switch(world->staticObjects[i].type)
+      switch(world->staticObjects[i].climable)
       {
-        case 2003: //climb
+        case 1: //climb
         {
           if(objState == InAir)
             objState = Climbing;
@@ -342,9 +346,9 @@ void Controllable::step3()
     }
     else if(checkRight(&world->staticObjects[i]))
     {
-      switch(world->staticObjects[i].type)
+      switch(world->staticObjects[i].climable)
       {
-        case 2003: //climb
+        case 1: //climb
         {
           if(objState == InAir)
             objState = Climbing;
@@ -370,9 +374,9 @@ void Controllable::step3()
   {
     if(checkBottomPlus(&world->staticObjects[i]))
     {
-      switch(world->staticObjects[i].type)
+      switch(world->staticObjects[i].climable)
       {
-        case 2003: //climb
+        case 1: //climb
           {
             objState = Climbing;
             break;
@@ -507,9 +511,9 @@ void Controllable::step2()
   {
     if(collision(&world->staticObjects[i]))
     {
-      switch(world->staticObjects[i].type)
+      switch(world->staticObjects[i].climable)
       {
-        case 2003: //climb
+        case 1: //climb
         {
           if(objState == InAir)
             objState = Climbing;
@@ -532,9 +536,9 @@ void Controllable::step2()
     {
       if(checkBottom(&world->staticObjects[i]))
       {
-        switch(world->staticObjects[i].type)
+        switch(world->staticObjects[i].climable)
         {
-          case 2003: //climb
+          case 1: //climb
             {
               break;
             }
@@ -1022,6 +1026,7 @@ GameObject::GameObject()
 
 GameObject::GameObject(string path, GameWorldC * wrld)
 {
+  climable = 0;
   world = wrld;
   string word;
   string value;
@@ -1052,6 +1057,10 @@ GameObject::GameObject(string path, GameWorldC * wrld)
       else if(word == "player" )
       {
 
+      }
+      else if(word == "climbable" )
+      {
+        climable = atoi(value.c_str());
       }
       else if(word == "texture")
       {
@@ -1100,6 +1109,7 @@ GameObject::GameObject(string path, GameWorldC * wrld)
 }
 GameObject::GameObject(int x, int y, int w, int h, SDL_Surface *i,int t)
 {
+  climable = 0;
   this->x = x;
   this->y = y;
   this->w = w;
