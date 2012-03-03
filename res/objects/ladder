@@ -4,7 +4,7 @@ climbable = 1
 w = 64
 h = 64
 coloffX = 0
-coloffY = 0
+coloffY = 48
 colW = 64
 colH = 64
 
