@@ -73,6 +73,22 @@ Controllable::Controllable(const Controllable& temp)
 
 }
 
+Controllable::Controllable (string path, GameWorldC * wrld)
+:GameObject( path, wrld)
+{
+  inAir  = 0;
+  climbing = 0;
+  direction = 0;
+
+  jumpSteps = 15;
+  stepCounter = 0;
+  buttonHold = 0;
+
+  health = 100;
+  stamina = 100;
+  stateAI = AnimIdle;
+}
+
 Controllable::Controllable (int xx, int yy, int ww, int hh, SDL_Surface *i)
 :GameObject()
 {
@@ -975,6 +991,17 @@ GameObject::GameObject(string path, GameWorldC * wrld)
   world = wrld;
   string word;
   string value;
+  x = 0;
+  y = 0;
+  type = 0;
+  animationFrame = 0;
+  sideColl = 0;
+  colOffX = 0;
+  colOffY = 0;
+  state = 0;
+  objState = 0;
+
+ 
 
   ifstream objfile(path.c_str());
 
@@ -1023,6 +1050,11 @@ GameObject::GameObject(string path, GameWorldC * wrld)
 
       /*cout << line << endl;*/
     }
+    this->clippingRect.x = 0;
+    this->clippingRect.y = 0;
+    this->clippingRect.w = this->w;
+    this->clippingRect.h = this->h;
+    objfile.close();
   }
   else
   {
@@ -1061,6 +1093,45 @@ GameObject::GameObject(int x, int y, int w, int h, SDL_Surface *i,int t)
   this->clippingRect.h = this->h;
 
   this->imageSurface = i;
+
+}
+
+GameObject * readObjectFile(string path, GameWorldC * wrld)
+{
+  string word;
+  string value;
+
+  ifstream objfile(path.c_str());
+
+  if(objfile.is_open())
+  {
+    while(objfile.good())
+    {
+      objfile >> word;
+      objfile >> value;
+      objfile >> value;
+      if(word == "type"   )
+      {
+        objfile.close();
+        if(value == "Controllable")
+        {
+          Controllable * newObj;
+          newObj = new Controllable(path,wrld);
+          newObj->xSpeed = 1;
+          newObj->ySpeed = 1;
+          return newObj;
+        }
+        else if(value == "Basic")
+        {
+          GameObject * newObj;
+          newObj = new GameObject(path,wrld);
+          return newObj;
+        }
+      }
+    }
+  }
+  return NULL;
+
 
 }
 

@@ -102,6 +102,7 @@ class Controllable : public GameObject
   Controllable();
   Controllable(const Controllable& temp);
   Controllable(int x, int y, int w, int h, SDL_Surface *i);
+  Controllable(string path, GameWorldC * wrld);
 };
 
 class Interactable : public GameObject
@@ -109,6 +110,7 @@ class Interactable : public GameObject
 	public:
 	virtual void doWhenCollision(Controllable * other);
 };
+GameObject * readObjectFile(string path, GameWorldC * wrld);
 
 
 

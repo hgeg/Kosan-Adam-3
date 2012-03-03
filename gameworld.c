@@ -272,7 +272,8 @@ GameWorldC::GameWorldC(const char *map)
   char line[100];
   int object,index,x=0,y=0;
   char del;
-  GameObject elma("./res/objects/kosan", this);
+  /*Controllable * elma = (Controllable *)readObjectFile("./res/objects/kosan", this);*/
+  /*GameObject elma("./res/objects/kosan", this);*/
   /*SDL_Surface *tempSurface;*/
   /*SDL_Surface *tempSurfaceOpt;*/
 
@@ -328,7 +329,10 @@ GameWorldC::GameWorldC(const char *map)
     }
     else if((char)object == '@')
     {
-      player = new Controllable(64*x,64*y,64,64,kosanText);
+      /*player = new Controllable(64*x,64*y,64,64,kosanText);*/
+      player = (Controllable *)readObjectFile("./res/objects/kosan", this);
+      player->x = 64*x;
+      player->y = 64*y;
       cam = new CameraC( player, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT,380,380,270,270);
       player->setColRect(22,14,20,50);
       player->stamina = 100;
