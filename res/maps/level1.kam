@@ -1,6 +1,6 @@
-0 ./res/gfx/city2.gif 1 -1 
-1 ./res/gfx/city1.gif 1 -1
-2 ./res/gfx/sky2.jpg  1  1
+0 ./res/gfx/city2.gif -1 150 499 500  
+1 ./res/gfx/city1.gif -1 120 600 500
+2 ./res/gfx/sky2.jpg  -1 -1  500 500
 
 @ kosan
 L ladder 

@@ -288,15 +288,15 @@ GameWorldC::GameWorldC(const char *map)
   unsigned char symbol;
 
   //background loader
-  int layer,offX,offY;
+  int layer,offX,offY,w,h;
   getline(loader,line);
   while(line!="")
   {
   stringstream ss (stringstream::in |stringstream::out);
     ss << line;
-    ss >> layer >> sPath >> offX >> offY;
+    ss >> layer >> sPath >> offX >> offY >> w >> h;
     /*cout << " layer: "<< layer << " path: " << sPath << " offset x: "  <<  offX << " offset y: " << offY << endl;*/
-    addBackground(500,500,surfaces.getImage(sPath),layer,offX,offY);
+    addBackground(w,h,surfaces.getImage(sPath),layer,offX,offY);
     getline(loader,line);
   }
   
