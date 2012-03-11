@@ -1,5 +1,5 @@
 type = Interactable
-texture = ./res/gfx/spring.png
+texture = ./res/gfx/spring.gif
 w = 64
 h = 64
 coloffX = 0
