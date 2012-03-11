@@ -1,0 +1,9 @@
+type = Basic
+texture = ./res/gfx/bump2.gif
+w = 64
+h = 80
+coloffX = 0
+coloffY = -16
+colW = 64
+colH = 80
+

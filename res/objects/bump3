@@ -1,0 +1,9 @@
+type = Basic
+texture = ./res/gfx/bump3.gif
+w = 64
+h = 88
+coloffX = 0
+coloffY = -24
+colW = 64
+colH = 88
+
