@@ -337,13 +337,24 @@ GameWorldC::GameWorldC(const char *map)
 
         continue;
        }
-       if(objects[del]->__class__)
+       if(objects[del]->__class__ == 1)
        { 
          /*printf ( "%c hello\n", del );*/
          dynamicObjects[dynamicCount] = *((Controllable *)objects[del]);
          dynamicObjects[dynamicCount].x = x*64;
          dynamicObjects[dynamicCount].y = y*64;
          dynamicCount++;
+       }
+       if(objects[del]->__class__ == 2)
+       { 
+         /*printf ( "%c hello\n", del );*/
+         staticObjects[staticCount] = *objects[del];
+         staticObjects[staticCount].x = x*64;
+         /*staticObjects[staticCount].y = y*64;*/
+         staticObjects[staticCount].y = y*64+staticObjects[staticCount].colOffY;
+         staticObjects[staticCount].collisionRect.x = x*64 + staticObjects[staticCount].colOffX;
+         staticObjects[staticCount].collisionRect.y = y*64 + staticObjects[staticCount].colOffY;
+         staticCount++;
        }
        else
        { 
@@ -363,9 +374,9 @@ GameWorldC::GameWorldC(const char *map)
   running = 1;
   player->world = this;
   settings.gravity = 1.4;
-  settings.airFriction = 0.2;
+  settings.airFriction = 0.00;
   settings.groundFriction = 0.4;
-  settings.ySpeedTerminal=  15;
+  settings.ySpeedTerminal=  20;
   settings.yJumpSpeed = 8;
   settings.xSpeedRunning = 7.5;
   settings.xSpeedWalking = 5.0;

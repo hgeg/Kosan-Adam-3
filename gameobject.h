@@ -112,8 +112,10 @@ class Controllable : public GameObject
 class Interactable : public GameObject
 {
 	public:
-	virtual void doWhenCollision(Controllable * other);
+	void doWhenCollision(Controllable * other);
+  Interactable(string path, GameWorldC * wrld);
 };
+
 GameObject * readObjectFile(string path, GameWorldC * wrld);
 
 

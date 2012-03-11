@@ -8,12 +8,13 @@ B brick
 1 bump1
 2 bump2
 3 bump3
+S spring
 
-@         L
+@       S L
 BBBBBB123BL   BBBBBBBBBB  BBBBBBBBBB  BBBBBBBBB  BBBBBBBBBBBBBBBBBBBB
           L 
           L
-          L                                           L
+          L S                                         L
 BBBBBBBBBBBBBBBB1  BB123  1BBB  BBBBBBBBB  BBBB  BBBBBL    BBBBBBBBBB
                                                       L
                       L             B                 L

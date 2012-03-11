@@ -72,12 +72,12 @@ int main(int argc, const char *argv[])
   while(worldC.running) {
 
     /*clear_screen();*/
-    SDL_FillRect(screen,NULL, 0x000000); 
+    /*SDL_FillRect(screen,NULL, 0x000000); */
 
 
     /*printf ( " aa a a%d\n", kosan.imageSurface->h);*/
     
-    SDL_BlitSurface(text,NULL,screen,&txt);
+    /*SDL_BlitSurface(text,NULL,screen,&txt);*/
     /*worldStep(&world,gameSpeed);*/
     worldC.worldStep();
     t1 = SDL_GetTicks();

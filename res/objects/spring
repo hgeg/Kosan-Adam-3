@@ -1,0 +1,9 @@
+type = Interactable
+texture = ./res/gfx/spring.png
+w = 64
+h = 64
+coloffX = 0
+coloffY = 0
+colW = 64
+colH = 64
+

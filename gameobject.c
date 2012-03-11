@@ -267,6 +267,12 @@ void Controllable::step3()
 
   for (int i = 0; i < world->staticCount; i++) 
   {
+    
+    if(abs(x - world->staticObjects[i].x) + abs(y - world->staticObjects[i].y) > 300 || world->staticObjects[i].__class__ == 2)
+    {
+      continue;
+    }
+
     if(checkBottom(&world->staticObjects[i]))
     {
       switch(world->staticObjects[i].climable)
@@ -374,6 +380,12 @@ void Controllable::step3()
   {
     if(checkBottomPlus(&world->staticObjects[i]))
     {
+      if(world->staticObjects[i].__class__ == 2)
+      {
+        Interactable * temp = (Interactable * )&world->staticObjects[i];
+        temp->doWhenCollision(this);
+        break;
+      }
       switch(world->staticObjects[i].climable)
       {
         case 1: //climb
@@ -414,7 +426,7 @@ void Controllable::step3()
       //ySpeed
       ySpeed = ySpeed + world->settings.gravity; 
       if(ySpeed>world->settings.ySpeedTerminal) ySpeed = world->settings.ySpeedTerminal; //terminal velocity;
-      else if(ySpeed<0-world->settings.ySpeedTerminal) ySpeed = 0-world->settings.ySpeedTerminal;;
+      else if(ySpeed<0-world->settings.ySpeedTerminal - 30) ySpeed = 0-world->settings.ySpeedTerminal -30;
 
       //xSpeed
       if(xSpeed>1)
@@ -1173,6 +1185,13 @@ GameObject * readObjectFile(string path, GameWorldC * wrld)
           newObj->__class__ = 0;
           return newObj;
         }
+        else if(value == "Interactable")
+        {
+          Interactable * newObj;
+          newObj = new Interactable(path,wrld);
+          newObj->__class__ = 2;
+          return newObj;
+        }
       }
     }
   }
@@ -1182,6 +1201,16 @@ GameObject * readObjectFile(string path, GameWorldC * wrld)
 }
 
 
+Interactable::Interactable (string path, GameWorldC * wrld)
+:GameObject( path, wrld)
+{
+  __class__ = 2;
+}
+
+void Interactable::doWhenCollision (Controllable * other)
+{
+  other->ySpeed = -30;
+}
 
 
 
