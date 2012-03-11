@@ -5,13 +5,16 @@
 @ kosan
 L ladder 
 B brick
+1 bump1
+2 bump2
+3 bump3
 
 @         L
-BBBBBBBBBBL   BBBBBBBBBB  BBBBBBBBBB  BBBBBBBBB  BBBBBBBBBBBBBBBBBBBB
+BBBBBB123BL   BBBBBBBBBB  BBBBBBBBBB  BBBBBBBBB  BBBBBBBBBBBBBBBBBBBB
           L 
           L
           L                                           L
-BBBBBBBBBBBBBBBBB  BBBBB  BBBB  BBBBBBBBB  BBBB  BBBBBL    BBBBBBBBBB
+BBBBBBBBBBBBBBBB1  BB123  1BBB  BBBBBBBBB  BBBB  BBBBBL    BBBBBBBBBB
                                                       L
-                      L                               L
-         BBBBBBBBBBBBBL   BBBBBBBBBBBBBBB  BBBBBBBBBBBBBBBBBBBB    BB
+                      L             B                 L
+         BBBBBBBBBBBBBL   BBBBBBB123BBBB  BBBBBBBBBBBBBBBBBBBB    BB

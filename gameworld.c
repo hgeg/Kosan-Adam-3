@@ -349,7 +349,7 @@ GameWorldC::GameWorldC(const char *map)
        { 
          staticObjects[staticCount] = *objects[del];
          staticObjects[staticCount].x = x*64;
-         staticObjects[staticCount].y = y*64;
+         staticObjects[staticCount].y = y*64+staticObjects[staticCount].colOffY;
          staticObjects[staticCount].collisionRect.x = x*64 + staticObjects[staticCount].colOffX;
          staticObjects[staticCount].collisionRect.y = y*64 + staticObjects[staticCount].colOffY;
          staticCount++;
